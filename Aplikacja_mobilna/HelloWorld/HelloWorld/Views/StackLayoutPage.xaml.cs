@@ -20,18 +20,16 @@ namespace HelloWorld.Views
 
         private void CreateLayout()
         {
-            var content = new StackLayout
-            {
-                Margin = new Thickness(30)
-            };
+            var content = new StackLayout();
+            content.Margin = new Thickness(30);
 
             var titleLabel = new Label
             {
                 Text = "Hello World",
+                HorizontalOptions = LayoutOptions.Center,
                 FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
-                FontAttributes = FontAttributes.Bold,
                 Margin = new Thickness(0, 30, 0, 100),
-                HorizontalOptions = LayoutOptions.Center
+                FontAttributes = FontAttributes.Bold
             };
             content.Children.Add(titleLabel);
 
@@ -61,9 +59,9 @@ namespace HelloWorld.Views
 
             var passwordEntry = new Entry
             {
+                IsPassword = true,
                 Placeholder = "Hasło",
                 Keyboard = Keyboard.Text,
-                IsPassword = true,
                 HorizontalTextAlignment = TextAlignment.Center
             };
             content.Children.Add(passwordEntry);
@@ -71,31 +69,30 @@ namespace HelloWorld.Views
             var buttonStackLayout = new StackLayout
             {
                 Orientation = StackOrientation.Horizontal,
-                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                HorizontalOptions = LayoutOptions.Center,
                 Spacing = 20
             };
+            content.Children.Add(buttonStackLayout);
 
             var loginButton = new Button
             {
                 Text = "Zaloguj",
-                WidthRequest = 150,
                 BackgroundColor = Color.LightBlue,
-                CornerRadius = 10
+                CornerRadius = 10,
+                WidthRequest = 150
             };
             loginButton.Clicked += Button_Clicked;
             buttonStackLayout.Children.Add(loginButton);
 
-            var registerButton = new Button
+            var accountButton = new Button
             {
                 Text = "Utwórz konto",
-                WidthRequest = 150,
-                BackgroundColor = Color.LightBlue,
-                CornerRadius = 10
+                BackgroundColor = Color.LightGray,
+                CornerRadius = 10,
+                WidthRequest = 150
             };
-            registerButton.Clicked += Button_Clicked_1;
-            buttonStackLayout.Children.Add(registerButton);
-
-            content.Children.Add(buttonStackLayout);
+            accountButton.Clicked += Button_Clicked;
+            buttonStackLayout.Children.Add(accountButton);
 
             this.Content = content;
         }
