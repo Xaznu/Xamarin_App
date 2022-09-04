@@ -9,7 +9,7 @@ namespace HelloWorld.Models
     {
         public string Title { get; set; }
         public Type PageType { get; set; }
-        public MenuItemType Type { get; set; }
+        public MenuItemType Type { get; set; }s
 
         protected MenuItem()
         {
