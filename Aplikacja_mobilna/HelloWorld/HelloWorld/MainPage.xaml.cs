@@ -1,18 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HelloWorld.Views;
+using System;
+using System.Collections.ObjectModel;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace HelloWorld
 {
-    public partial class MainPage : ContentPage
+    public partial class App : Application
     {
-        public MainPage()
+        public ObservableCollection<Models.MenuItem> MenuPages = new ObservableCollection<Models.MenuItem>();
+
+        public App()
         {
             InitializeComponent();
+            //SetMenuItem();
+
+            //MainPage = new MasterDetailMainPage(MenuPages);
+            //var masterPage = MainPage as MasterDetailPage;
+            //masterPage.Detail = new NavigationPage((Page)Activator.CreateInstance(MenuPages[0].PageType));
+
+            MainPage = new MainPage();
+        }
+
+        private void SetMenuItem()
+        {
+            MenuPages.Add(new Models.MenuItem(Models.MenuItemType.Sport, "Samochody sportowe", typeof(SportsCarPage)));
+            MenuPages.Add(new Models.MenuItem(Models.MenuItemType.SUV, "SUV", typeof(SuvPage)));
+            MenuPages.Add(new Models.MenuItem(Models.MenuItemType.Sedan, "Samochody osobowe", typeof(StandardCarsPage)));
+        }
+
+        protected override void OnStart()
+        {
+        }
+
+        protected override void OnSleep()
+        {
+        }
+
+        protected override void OnResume()
+        {
         }
     }
 }
