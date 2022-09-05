@@ -5,8 +5,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="HelloWorld.Views.StandardCarsPage"
+             Title="Samochody osobowe"
              NavigationPage.HasNavigationBar="False">
     <StackLayout Margin="0,30,0,0">
+        <Label Text="Samochody osobowe" 
+               
+               FontSize="20"
+               HorizontalOptions="Center"
+               Margin="0,0,0,20"/>
         <ListView HasUnevenRows="True"
                   x:Name="CarListView"
                   ItemSelected="CarListView_ItemSelected">

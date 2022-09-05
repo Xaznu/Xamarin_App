@@ -1,25 +1,46 @@
-﻿ using HelloWorld.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-namespace HelloWorld.Views
-{
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CarDetailPage : ContentPage
-    {
-        public Car Car { get; set; }
-        public CarDetailPage(Car car)
-        {
-            Car = car;
-
-            this.BindingContext = Car;
-            InitializeComponent();
-        }
-    }
-}
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="HelloWorld.Views.CarDetailPage"
+             NavigationPage.HasBackButton="True"
+             Title="Szczegóły samochodu">
+    <StackLayout Margin="30">
+        <Label Text="{Binding Name}"
+               HorizontalOptions="Center"
+               FontSize="16"
+               FontAttributes="Bold"/>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Rok produkcji"
+                   FontAttributes="Bold"
+                   HorizontalOptions="FillAndExpand"/>
+            <Label Text="{Binding Year}"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Kolor"
+                   FontAttributes="Bold"
+                   HorizontalOptions="FillAndExpand"/>
+            <Label Text="{Binding Color}"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Cena"
+                   FontAttributes="Bold"
+                   HorizontalOptions="FillAndExpand"/>
+            <Label Text="{Binding Price}"/>
+        </StackLayout>
+        <Button Text="Wstecz"
+                HorizontalOptions="Center"
+                Clicked="Button_Clicked"/>
+        <Button Text="Pupup 1"
+                HorizontalOptions="Center"
+                Clicked="Button_Clicked_1"/>
+        <Button Text="Pupup 2"
+                HorizontalOptions="Center"
+                Clicked="Button_Clicked_2"/>
+        <Button Text="Pupup 3"
+                HorizontalOptions="Center"
+                Clicked="Button_Clicked_3"/>
+    </StackLayout>
+</ContentPage>

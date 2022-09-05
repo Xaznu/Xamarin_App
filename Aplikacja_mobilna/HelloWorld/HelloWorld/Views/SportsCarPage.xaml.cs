@@ -26,10 +26,25 @@ namespace HelloWorld.Views
             CarListView.ItemsSource = Cars;
         }
 
+        public SportsCarPage()
+        {
+            Cars = new ObservableCollection<Car>()
+            {
+                new Car{ Name = "Ferrari California", Year = 2015, Color = "Czerwony", Type = CarType.Sport, Price = 600000},
+                new Car{ Name = "Lamborghini Gallardo", Year = 2006, Color = "Niebieski", Type = CarType.Sport, Price = 700000},
+                new Car{ Name = "Maserati granturismo s coupe", Year = 2019, Color = "Czarny", Type = CarType.Sport, Price = 350000}
+            };
+
+            InitializeComponent();
+            CarListView.ItemsSource = Cars;
+        }
+
+
         private void CarListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             var car = e.SelectedItem as Car;
-            Navigation.PushAsync(new CarDetailPage(car));
+            //Navigation.PushAsync(new CarDetailPage(car));
+            Navigation.PushModalAsync(new CarDetailPage(car), false);
         }
     }
 }

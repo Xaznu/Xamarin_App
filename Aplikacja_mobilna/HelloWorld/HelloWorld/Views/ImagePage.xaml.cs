@@ -16,6 +16,12 @@ namespace HelloWorld.Views
         {
             InitializeComponent();
 
+            //var imageSource = new UriImageSource();
+            //imageSource.Uri = new Uri("https://source.unsplash.com/1600x900/?dog");
+            //imageSource.CachingEnabled = true;
+            //imageSource.CacheValidity = TimeSpan.FromHours(3);
+
+            //imageControl.Source = imageSource;
             //imageControl.Source = ImageSource.FromResource("HelloWorld.Images.car.jpg");
         }
     }

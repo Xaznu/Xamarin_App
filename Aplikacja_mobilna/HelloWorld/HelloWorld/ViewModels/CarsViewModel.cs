@@ -1,41 +1,63 @@
 ﻿using HelloWorld.Models;
+using HelloWorld.Persistance;
+using HelloWorld.Services;
 using HelloWorld.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace HelloWorld.ViewModels
 {
-    class CarsViewModel
+    public class CarsViewModel : BaseViewModel
     {
         public ObservableCollection<CarGroup> CarList { get; private set; }
-        public bool IsRefreshing { get; set; }
+
+        private bool isRefreshing;
+        public bool IsRefreshing
+        {
+            get { return isRefreshing; }
+            set { SetValue(ref isRefreshing, value); }
+        }
+
+        public ICommand RefreshCarListCommand { get; private set; }
+        public ICommand RemoveCarCommand { get; private set; }
+        public ICommand TappedCarCommand { get; private set; }
+        public ICommand SelectedCarCommand { get; private set; }
+        public ICommand AddCarCommand { get; private set; }
+
+
         private INavigation _navigation;
 
         public CarsViewModel(INavigation navigation)
         {
             _navigation = navigation;
+
+            RefreshCarListCommand = new Command(() => RefresLissView());
+            RemoveCarCommand = new Command<Car>(car => RemoveCarFromCollection(car));
+            TappedCarCommand = new Command<Car>(car => TappedItem(car));
+            SelectedCarCommand = new Command<Car>(car => SelectedItem(car));
+            AddCarCommand = new Command(() => AddCar());
+
+            var carsFromDatabae = DatabaseManager.Instance.GetALL<Car>();
+
             CarList = new ObservableCollection<CarGroup>
             {
-                new CarGroup("Samochody sportowe", new List<Car>
-                {
-                    new Car{ Name = "Ferrari California", Year = 2015, Color = "Czerwony", Type = CarType.Sport, Price = 600000},
-                    new Car{ Name = "Lamborghini Gallardo", Year = 2006, Color = "Niebieski", Type = CarType.Sport, Price = 700000},
-                    new Car{ Name = "Maserati granturismo s coupe", Year = 2019, Color = "Czarny", Type = CarType.Sport, Price = 350000}
-                }),
-                new CarGroup("Samochody osobowe", new List<Car>
-                {
-                    new Car{ Name = "Audi A4", Year = 2010, Color = "Czerwony", Type = CarType.Sedan, Price = 40000},
-                    new Car{ Name = "Mercedes CLA", Year = 2012, Color = "Biały", Type = CarType.Sedan, Price = 60000}
-                }),
-                new CarGroup("SUV", new List<Car>
-                {
-                    new Car{ Name = "Ford Kuga", Year = 2018, Color = "Czerwony", Type = CarType.SUV, Price = 80000},
-                    new Car{ Name = "BMW X5", Year = 2020, Color = "Carny", Type = CarType.SUV, Price = 120000},
-                })
+                new CarGroup("Samochody sportowe", carsFromDatabae.Where(c => c.Type == CarType.Sport).ToList()),
+                new CarGroup("Samochody osobowe", carsFromDatabae.Where(c => c.Type == CarType.Sedan).ToList()),
+                new CarGroup("SUV", carsFromDatabae.Where(c => c.Type == CarType.SUV).ToList())
             };
+        }
+
+        private void AddCar()
+        {
+            _navigation.PushModalAsync(new AddCarPage(CarList));
         }
 
         public void NavigateToCarDeatilPage(Car car)
@@ -43,12 +65,27 @@ namespace HelloWorld.ViewModels
             _navigation.PushAsync(new CarDetailPage(car));
         }
 
-        public void DisplayAlert(string message, string title)
+        private void TappedItem(Car car)
         {
-            App.Current.MainPage.DisplayAlert(title, message, "Ok");
+            App.Current.MainPage.DisplayAlert("Tapped item", car.Name, "Ok");
         }
 
-        public void RemoveCarFromCollection(Car car)
+        private async Task SelectedItem(Car car)
+        {
+            //App.Current.MainPage.DisplayAlert("Selected item", car.Name, "Ok");
+            //var fileService = DependencyService.Get<IFileService>();
+            //fileService.WriteTextAsync(car.Name, $"To jest samochód: {car.Name} w kolorze: {car.Color}");
+
+            using (var stream = await FileSystem.OpenAppPackageFileAsync(car.Name))
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    await writer.WriteAsync($"To jest samochód: {car.Name} w kolorze: {car.Color}");
+                }
+            }
+        }
+
+        private void RemoveCarFromCollection(Car car)
         {
             foreach (var carGroup in CarList)
             {
@@ -57,10 +94,13 @@ namespace HelloWorld.ViewModels
                     carGroup.Remove(car);
                 }
             }
+
+            DatabaseManager.Instance.RemoveFromDatabase<Car>(car.Id);
         }
 
-        public void RefresLissView()
+        private void RefresLissView()
         {
+            IsRefreshing = true;
             var carList = new List<Car>
             {
                 new Car()
@@ -77,6 +117,7 @@ namespace HelloWorld.ViewModels
 
             var carGroup = new CarGroup("Samochody terenowe", carList);
             CarList.Add(carGroup);
+            IsRefreshing = false;
         }
     }
 }

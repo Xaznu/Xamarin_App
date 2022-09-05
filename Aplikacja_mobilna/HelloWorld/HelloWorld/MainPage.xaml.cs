@@ -1,44 +1,63 @@
-﻿using HelloWorld.Views;
+﻿using HelloWorld.Models;
+using HelloWorld.Views;
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+using Xamarin.Forms.PlatformConfiguration;
+using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 
 namespace HelloWorld
 {
-    public partial class App : Application
+    // Learn more about making custom code visible in the Xamarin.Forms previewer
+    // by visiting https://aka.ms/xamarinforms-previewer
+    [DesignTimeVisible(false)]
+    public partial class MainPage : Xamarin.Forms.TabbedPage
     {
-        public ObservableCollection<Models.MenuItem> MenuPages = new ObservableCollection<Models.MenuItem>();
-
-        public App()
+        public MainPage()
         {
+            var carList = new List<Car>()
+            {
+                new Car{ Name = "Ferrari California", Year = 2015, Color = "Czerwony", Type = CarType.Sport, Price = 600000},
+                new Car{ Name = "Lamborghini Gallardo", Year = 2006, Color = "Niebieski", Type = CarType.Sport, Price = 700000},
+                new Car{ Name = "Maserati granturismo s coupe", Year = 2019, Color = "Czarny", Type = CarType.Sport, Price = 350000},
+                new Car{ Name = "Audi A4", Year = 2010, Color = "Czerwony", Type = CarType.Sedan, Price = 40000},
+                new Car{ Name = "Mercedes CLA", Year = 2012, Color = "Biały", Type = CarType.Sedan, Price = 60000},
+                new Car{ Name = "Ford Kuga", Year = 2018, Color = "Czerwony", Type = CarType.SUV, Price = 80000},
+                new Car{ Name = "BMW X5", Year = 2020, Color = "Carny", Type = CarType.SUV, Price = 120000},
+            };
+
+            var sportsCarList = carList.Where(c => c.Type == CarType.Sport).ToList();
+            var sportsCarPage = new NavigationPage(new SportsCarPage(sportsCarList))
+            {
+                Title = "Sportowe",
+                IconImageSource = "car_icon.png"
+            };
+
+            var standardCarList = carList.Where(c => c.Type == CarType.Sedan).ToList();
+            var standardCarPage = new NavigationPage(new StandardCarsPage(standardCarList))
+            {
+                Title = "Osobowe",
+                IconImageSource = "car_icon.png"
+            };
+
+            var suvCarList = carList.Where(c => c.Type == CarType.SUV).ToList();
+            var suvCarPage = new NavigationPage(new SuvPage(suvCarList))
+            {
+                Title = "SUV",
+                IconImageSource = "car_icon.png"
+            };
+
+            Children.Add(sportsCarPage);
+            Children.Add(standardCarPage);
+            Children.Add(suvCarPage);
+
+            On<Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
+
             InitializeComponent();
-            //SetMenuItem();
-
-            //MainPage = new MasterDetailMainPage(MenuPages);
-            //var masterPage = MainPage as MasterDetailPage;
-            //masterPage.Detail = new NavigationPage((Page)Activator.CreateInstance(MenuPages[0].PageType));
-
-            MainPage = new MainPage();
-        }
-
-        private void SetMenuItem()
-        {
-            MenuPages.Add(new Models.MenuItem(Models.MenuItemType.Sport, "Samochody sportowe", typeof(SportsCarPage)));
-            MenuPages.Add(new Models.MenuItem(Models.MenuItemType.SUV, "SUV", typeof(SuvPage)));
-            MenuPages.Add(new Models.MenuItem(Models.MenuItemType.Sedan, "Samochody osobowe", typeof(StandardCarsPage)));
-        }
-
-        protected override void OnStart()
-        {
-        }
-
-        protected override void OnSleep()
-        {
-        }
-
-        protected override void OnResume()
-        {
         }
     }
 }
