@@ -10,7 +10,7 @@ using Xamarin.Forms;
 
 namespace HelloWorld.Droid
 {
-    [Activity(Label = "HelloWorld", Icon = "@drawable/icon_xamarin", Theme = "@style/splashscreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "HelloWorld", Icon = "@drawable/icon_xamarin", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
@@ -18,7 +18,8 @@ namespace HelloWorld.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
-            Forms.SetFlags("SwipeView_Experimental");
+            Forms.SetFlags("IndicatorView_Experimental");
+            //Forms.SetFlags("SwipeView_Experimental");
 
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
 
