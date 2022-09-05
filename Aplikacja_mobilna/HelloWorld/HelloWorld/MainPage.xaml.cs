@@ -22,7 +22,7 @@ namespace HelloWorld
             MainPage = new MainPage();
         }
 
-        private void SetMenuItem()
+        private void SetMenuItem()s
         {
             MenuPages.Add(new Models.MenuItem(Models.MenuItemType.Sport, "Samochody sportowe", typeof(SportsCarPage)));
             MenuPages.Add(new Models.MenuItem(Models.MenuItemType.SUV, "SUV", typeof(SuvPage)));
