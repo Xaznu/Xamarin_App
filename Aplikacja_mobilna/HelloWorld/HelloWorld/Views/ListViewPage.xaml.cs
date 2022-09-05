@@ -1,12 +1,14 @@
 ﻿using HelloWorld.Models;
+using HelloWorld.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
+using Xamarin.Forms.Markup;
 using Xamarin.Forms.Xaml;
 
 namespace HelloWorld.Views
@@ -14,21 +16,47 @@ namespace HelloWorld.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ListViewPage : ContentPage
     {
+        public CarsViewModel ViewModel { get; set; }
         public ListViewPage()
         {
+            ViewModel = new CarsViewModel(Navigation);
             InitializeComponent();
+            BindingContext = ViewModel;
 
-            List<Car> carList = new List<Car>
-            {
-                new Car{ Name = "Audi A4", Year = 2010},
-                new Car{ Name = "Mercedes CLA", Year = 2012},
-                new Car{ Name = "Ford Kuga", Year = 2018},
-                new Car{ Name = "Ferrari California", Year = 2015},
-                new Car{ Name = "Lamborghini Gallardo", Year = 2006},
-                new Car{ Name = "BMW X5", Year = 2020},
-            };
+        }
 
-            CarListView.ItemsSource = carList;
+        private void Button_Clicked(object sender, EventArgs e)
+        {
+            var senderBindingContext = ((Button)sender).BindingContext;
+            var car = (Car)senderBindingContext;
+
+            ViewModel.NavigateToCarDeatilPage(car);
+        }
+
+        private void CarListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            ViewModel.SelectedCarCommand.Execute(e.SelectedItem);
+        }
+
+        private void CarListView_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            ViewModel.TappedCarCommand.Execute(e.Item);
+        }
+
+        private void MenuItem_Clicked(object sender, EventArgs e)
+        {
+            var menuItem = sender as Xamarin.Forms.MenuItem;
+            var car = menuItem.CommandParameter as Car;
+
+            //(BindingContext as CarsViewModel).DisplayAlert(car.Name, "Details from context action");
+        }
+
+        private void Button_Clicked_1(object sender, EventArgs e)
+        {
+            var button = sender as Button;
+            var carGroup = button.CommandParameter as CarGroup;
+
+            carGroup.ShowOrHideElements();
         }
     }
 }
